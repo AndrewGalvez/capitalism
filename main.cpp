@@ -1,5 +1,6 @@
 #include "utils.hpp"
 #include <cmath>
+#include <iostream>
 #include <raylib.h>
 
 #define RENDER_W 800.0f
@@ -7,7 +8,7 @@
 
 bool exitGame = false;
 
-class SceneTransition {
+class SceneTransitionFade {
 public:
   int frames = 0;
   int maxFrames = 0;
@@ -23,11 +24,12 @@ public:
     }
   }
 
-  SceneTransition(int maxFrames, Color start, Color end)
+  SceneTransitionFade(int maxFrames, Color start, Color end)
       : maxFrames(maxFrames), start(start), end(end) {};
 
   Color getColor() {
-    return ColorLerp(start, end, ease_in_out_cubic(frames / maxFrames));
+    return ColorLerp(start, end,
+                     ease_in_out_cubic((float)frames / (float)maxFrames));
   }
 };
 
@@ -37,8 +39,8 @@ class GameMenuMain {
 public:
   const Texture2D gh_logo = LoadTexture("assets/github.jpg");
   bool is_switching_to_game = false;
-  SceneTransition transition =
-      SceneTransition(64, ColorAlpha(DARKGREEN, 0), DARKGREEN);
+  SceneTransitionFade transition =
+      SceneTransitionFade(64, ColorAlpha(DARKGREEN, 0), DARKGREEN);
   float play_text_hovered_time = 0;
   float quit_text_hovered_time = 0;
   bool play_text_hovered, quit_text_hovered;
@@ -96,6 +98,24 @@ public:
   }
 };
 
+class Game {
+public:
+  SceneTransitionFade from_main_menu_transition =
+      SceneTransitionFade(64, DARKGREEN, ColorAlpha(DARKGREEN, 0));
+
+  void update() {
+    if (!from_main_menu_transition.finished) {
+      from_main_menu_transition.update();
+    }
+  }
+
+  void draw() {
+    if (!from_main_menu_transition.finished) {
+      DrawRectangle(0, 0, 800, 600, from_main_menu_transition.getColor());
+    }
+  }
+};
+
 int main() {
   InitWindow(RENDER_W, RENDER_H, "Capitalism");
   SetWindowState(FLAG_FULLSCREEN_MODE);
@@ -104,6 +124,7 @@ int main() {
 
   RenderTexture2D render_texture = LoadRenderTexture(RENDER_W, RENDER_H);
   GameMenuMain main_menu;
+  Game game;
 
   SetTargetFPS(32);
 
@@ -122,7 +143,16 @@ int main() {
     mouse_pos.x = (mouse_pos.x - ox) / scale;
     mouse_pos.y = (mouse_pos.y - oy) / scale;
 
-    main_menu.update(mouse_pos, game_menu_state);
+    switch (game_menu_state) {
+    case GMSTATE_MAIN: {
+      main_menu.update(mouse_pos, game_menu_state);
+      break;
+    }
+    case GMSTATE_GAME: {
+      game.update();
+      break;
+    }
+    };
 
     ClearBackground(WHITE);
     BeginTextureMode(render_texture);
@@ -130,6 +160,8 @@ int main() {
 
     if (game_menu_state == GMSTATE_MAIN) {
       main_menu.draw(mouse_pos);
+    } else if (game_menu_state == GMSTATE_GAME) {
+      game.draw();
     }
 
     EndTextureMode();
