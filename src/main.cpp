@@ -9,6 +9,7 @@ Texture2D tileset_02;
 Texture2D tileset_04;
 Texture2D tileset_05;
 Texture2D tileset_b;
+Texture2D characters;
 
 int main() {
   InitWindow(RENDER_W, RENDER_H, "Capitalism");

@@ -14,9 +14,14 @@ public:
   SceneTransitionFade from_main_menu_transition =
       SceneTransitionFade(16, DARKGREEN, ColorAlpha(DARKGREEN, 0));
   Camera2D gamecam;
-  Rectangle player = {0, 0, 50, 100};
+  Rectangle player = {0, 0, MAP_TILE_SIZE, MAP_TILE_SIZE};
   float playerSpeed = 200;
   MapTile map[100][100] = {MAP_TILE_GRASS};
+  int player_facing = 0;
+  int player_anim_frame = 0;
+  int player_anim_frame_real_max = 30;
+  int player_anim_frame_real = 0;
+  PlayerSpriteState player_state = PLAYER_SPRITE_STATE_WALK;
 
   Game() {
     gamecam.target = {player.x + player.width / 2,
@@ -46,13 +51,17 @@ public:
 
     if (IsKeyDown(KEY_A)) {
       player.x -= playerSpeed * dt;
+      player_facing = 1;
     } else if (IsKeyDown(KEY_D)) {
       player.x += playerSpeed * dt;
+      player_facing = 2;
     }
     if (IsKeyDown(KEY_W)) {
       player.y -= playerSpeed * dt;
+      player_facing = 3;
     } else if (IsKeyDown(KEY_S)) {
       player.y += playerSpeed * dt;
+      player_facing = 0;
     }
 
     if (std::abs((player.x + player.width / 2) - gamecam.target.x) > 100) {
@@ -70,6 +79,12 @@ public:
       else
         gamecam.target.y =
             player.y + player.height / 2 + PLAYER_CAMERA_FOLLOW_MARGIN * 0.75;
+    }
+
+    player_anim_frame_real++;
+    if (player_anim_frame_real == player_anim_frame_real_max) {
+      player_anim_frame = (player_anim_frame + 1) % 2;
+      player_anim_frame_real = 0;
     }
   }
 
@@ -108,7 +123,10 @@ public:
       }
     }
 
-    DrawRectangleRec(player, BLUE);
+    DrawTexturePro(
+        characters,
+        GetPlayerSpriteSource(player_state, player_anim_frame, player_facing),
+        player, {0, 0}, 0.0f, WHITE);
 
     EndMode2D();
 
