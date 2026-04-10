@@ -11,6 +11,11 @@ inline float ease_in_out_cubic(float t) {
   return t < 0.5 ? 4 * t * t * t : 1 - std::pow(-2 * t + 2, 3) / 2;
 }
 
+inline float ease_in_out_circ(float x) {
+  return x < 0.5 ? (1 - std::sqrt(1 - std::pow(2 * x, 2))) / 2
+                 : (std::sqrt(1 - std::pow(-2 * x + 2, 2)) + 1) / 2;
+}
+
 void DrawTextCentered(const char *text, int x, int y, int fontSize,
                       Color color) {
   DrawText(text, x - (MeasureText(text, fontSize) / 2), y, fontSize, color);

@@ -2,7 +2,6 @@
 #include "assets.hpp"
 #include "raylib.h"
 #include "utils.hpp"
-#include <iterator>
 #include <raymath.h>
 
 #define PLAYER_CAMERA_FOLLOW_MARGIN 100
