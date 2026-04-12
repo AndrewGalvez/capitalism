@@ -12,27 +12,29 @@ Texture2D tileset_b;
 Texture2D characters;
 
 int main() {
-  InitWindow(RENDER_W, RENDER_H, "Capitalism");
+  InitWindow(Const_Render::width, Const_Render::height, "Capitalism");
   LoadAssets();
   // SetWindowState(FLAG_FULLSCREEN_MODE);
   SetWindowState(FLAG_WINDOW_RESIZABLE);
 
   enum GameMenuState game_menu_state = GMSTATE_GAME;
 
-  RenderTexture2D render_texture = LoadRenderTexture(RENDER_W, RENDER_H);
+  RenderTexture2D render_texture =
+      LoadRenderTexture(Const_Render::width, Const_Render::height);
   GameMenuMain main_menu;
   Game game;
 
-  SetTargetFPS(32);
+  SetTargetFPS(Const_Render::target_fps);
 
   while (!WindowShouldClose() && !exitGame) {
     DrawFPS(0, 0);
     // for render texture
-    int rw = GetRenderWidth();
-    int rh = GetRenderHeight();
-    float scale = fminf((float)rw / RENDER_W, (float)rh / RENDER_H);
-    int fw = (int)(RENDER_W * scale);
-    int fh = (int)(RENDER_H * scale);
+    int rw = GetScreenWidth();
+    int rh = GetScreenHeight();
+    float scale =
+        fminf((float)rw / Const_Render::width, (float)rh / Const_Render::height);
+    int fw = (int)(Const_Render::width * scale);
+    int fh = (int)(Const_Render::height * scale);
     int ox = (rw - fw) / 2;
     int oy = (rh - fh) / 2;
     //-----
@@ -55,7 +57,7 @@ int main() {
 
     ClearBackground(WHITE);
     BeginTextureMode(render_texture);
-    DrawRectangle(0, 0, 800, 600, BLACK);
+    DrawRectangle(0, 0, Const_Render::width, Const_Render::height, BLACK);
 
     if (game_menu_state == GMSTATE_MAIN) {
       main_menu.draw(mouse_pos);
@@ -63,13 +65,14 @@ int main() {
       game.draw();
     }
 
-    EndTextureMode();
+   EndTextureMode();
 
     BeginDrawing();
 
     // draw render texture
 
-    DrawTexturePro(render_texture.texture, {0, 0, RENDER_W, -RENDER_H},
+    DrawTexturePro(render_texture.texture,
+                   {0, 0, Const_Render::width, -Const_Render::height},
                    {(float)ox, (float)oy, (float)fw, (float)fh}, {0, 0}, 0,
                    WHITE);
 

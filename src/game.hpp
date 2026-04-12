@@ -12,23 +12,28 @@ public:
   SceneTransitionFade from_main_menu_transition =
       SceneTransitionFade(16, DARKGREEN, ColorAlpha(DARKGREEN, 0));
   Camera2D gamecam;
-  MapTile map[100][100];
+  MapTile map[Const_Map::size][Const_Map::size];
 
   Player player;
 
   Game() {
     gamecam.target = {player.rect.x + player.rect.width / 2,
                       player.rect.y + player.rect.height / 2};
-    gamecam.offset = {RENDER_W / 2, RENDER_H / 2};
+    gamecam.offset = {Const_Render::width / 2.0f, Const_Render::height / 2.0f};
     gamecam.rotation = 0.0f;
-    gamecam.zoom = 0.5f;
+    gamecam.zoom = Const_Camera::initial_zoom;
 
-    for (int y = 0; y < 100; y++) {
-      for (int x = 0; x < 100; x++) {
-        if (Vector2Distance({(float)x + 0.5f, (float)y + 0.5f},
-                            {50.0f, 50.0f}) > 5) {
+    for (int y = 0; y < Const_Map::size; y++) {
+      for (int x = 0; x < Const_Map::size; x++) {
+        if (Vector2Distance({(float)x + Const_Map::cell_center_offset,
+                             (float)y + Const_Map::cell_center_offset},
+                            {(float)Const_Map::center,
+                             (float)Const_Map::center}) >
+            Const_Map::spawn_safe_radius) {
           map[y][x] = MapTile(MAP_TILE_SOURCE_GRASS);
-          if (GetRandomValue(0, 6) == 3) {
+          if (GetRandomValue(Const_Map::tree_spawn_roll_min,
+                             Const_Map::tree_spawn_roll_max) ==
+              Const_Map::tree_spawn_roll_hit) {
             map[y][x] = MapTile(MAP_TILE_SOURCE_TREE);
           }
         } else {
@@ -37,8 +42,8 @@ public:
       }
     }
 
-    for (int y = 0; y < 100; y++) {
-      for (int x = 0; x < 100; x++) {
+    for (int y = 0; y < Const_Map::size; y++) {
+      for (int x = 0; x < Const_Map::size; x++) {
         MapTileSourceName n = map[y - 1][x].name;
         MapTileSourceName e = map[y][x + 1].name;
         MapTileSourceName s = map[y + 1][x].name;
@@ -59,11 +64,12 @@ public:
   void draw() {
     BeginMode2D(gamecam);
 
-    for (int i = 0; i < 100; i++) {
-      for (int j = 0; j < 100; j++) {
+    for (int i = 0; i < Const_Map::size; i++) {
+      for (int j = 0; j < Const_Map::size; j++) {
         Rectangle source = {0, 0, 32, 32};
-        Rectangle dest = {(i - 50) * MAP_TILE_SIZE, (j - 50) * MAP_TILE_SIZE,
-                          MAP_TILE_SIZE, MAP_TILE_SIZE};
+        Rectangle dest = {(i - Const_Map::center) * Const_Map::tile_size,
+                          (j - Const_Map::center) * Const_Map::tile_size,
+                          Const_Map::tile_size, Const_Map::tile_size};
         if (map[j][i].name == MAP_TILE_SOURCE_TREE) {
           DrawTexturePro(tileset_02, {0, 0, 32, 32}, dest, {0, 0}, 0, WHITE);
         }
@@ -77,7 +83,8 @@ public:
     EndMode2D();
 
     if (!from_main_menu_transition.finished) {
-      DrawRectangle(0, 0, 800, 600, from_main_menu_transition.getColor());
+      DrawRectangle(0, 0, Const_Render::width, Const_Render::height,
+                    from_main_menu_transition.getColor());
     }
   }
 };

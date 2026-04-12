@@ -7,31 +7,40 @@
 
 class Player {
 public:
-  Rectangle rect = {0, 0, MAP_TILE_SIZE, MAP_TILE_SIZE};
-  Rectangle hitbox = {0, 0, MAP_TILE_SIZE, MAP_TILE_SIZE};
+  Rectangle rect = {0, 0, Const_Map::tile_size, Const_Map::tile_size};
+  Rectangle hitbox = {0, 0, Const_Map::tile_size, Const_Map::tile_size};
 
   int facing = 0;
   int anim_frame = 0;
-  int anim_frame_real_max = 8;
+  int anim_frame_real_max = Const_Player::animation_frame_real_max;
   int anim_frame_real = 0;
-  float speed = 200;
+  float speed = Const_Player::speed;
   PlayerSpriteState state;
 
-  void update(MapTile map[100][100], float dt, Camera2D &gamecam) {
-    this->hitbox = {this->rect.x + ((this->rect.width / 32.0f) * 10),
-                    this->rect.y + ((this->rect.height / 32.0f) * 4),
-                    this->rect.width - ((this->rect.width / 32.0f) * 20),
-                    this->rect.height - ((this->rect.height / 32.0f) * 8)};
+  void update(MapTile map[Const_Map::size][Const_Map::size], float dt,
+              Camera2D &gamecam) {
+    this->hitbox = {this->rect.x + ((this->rect.width / Const_Player::sprite_unit_px) *
+                                    Const_Player::hitbox_left_units),
+                    this->rect.y + ((this->rect.height / Const_Player::sprite_unit_px) *
+                                    Const_Player::hitbox_top_units),
+                    this->rect.width -
+                        ((this->rect.width / Const_Player::sprite_unit_px) *
+                         Const_Player::hitbox_right_units),
+                    this->rect.height -
+                        ((this->rect.height / Const_Player::sprite_unit_px) *
+                         Const_Player::hitbox_bottom_units)};
 
     this->state = PLAYER_SPRITE_STATE_IDLE;
 
     if (IsKeyDown(KEY_A)) {
       int npxt =
-          (int)floor((this->hitbox.x - this->speed * dt) / MAP_TILE_SIZE) + 50;
+          (int)floor((this->hitbox.x - this->speed * dt) / Const_Map::tile_size) +
+          Const_Map::center;
       int npyts[2] = {
-          (int)floor(this->hitbox.y / MAP_TILE_SIZE) + 50,
-          (int)floor((this->hitbox.y + this->hitbox.height) / MAP_TILE_SIZE) +
-              50};
+          (int)floor(this->hitbox.y / Const_Map::tile_size) + Const_Map::center,
+          (int)floor((this->hitbox.y + this->hitbox.height) /
+                     Const_Map::tile_size) +
+              Const_Map::center};
       if (map[npyts[0]][npxt].type != MAP_TILE_TYPE_WALL &&
           map[npyts[1]][npxt].type != MAP_TILE_TYPE_WALL) {
         this->rect.x -= this->speed * dt;
@@ -41,12 +50,13 @@ public:
     } else if (IsKeyDown(KEY_D)) {
       int npxt =
           (int)floor((this->hitbox.x + this->hitbox.width + this->speed * dt) /
-                     MAP_TILE_SIZE) +
-          50;
+                     Const_Map::tile_size) +
+          Const_Map::center;
       int npyts[2] = {
-          (int)floor(this->hitbox.y / MAP_TILE_SIZE) + 50,
-          (int)floor((this->hitbox.y + this->hitbox.height) / MAP_TILE_SIZE) +
-              50};
+          (int)floor(this->hitbox.y / Const_Map::tile_size) + Const_Map::center,
+          (int)floor((this->hitbox.y + this->hitbox.height) /
+                     Const_Map::tile_size) +
+              Const_Map::center};
       if (map[npyts[0]][npxt].type != MAP_TILE_TYPE_WALL &&
           map[npyts[1]][npxt].type != MAP_TILE_TYPE_WALL) {
         this->rect.x += this->speed * dt;
@@ -56,11 +66,13 @@ public:
     }
     if (IsKeyDown(KEY_W)) {
       int npxts[2] = {
-          (int)floor(this->hitbox.x / MAP_TILE_SIZE) + 50,
-          (int)floor((this->hitbox.x + this->hitbox.width) / MAP_TILE_SIZE) +
-              50};
+          (int)floor(this->hitbox.x / Const_Map::tile_size) + Const_Map::center,
+          (int)floor((this->hitbox.x + this->hitbox.width) /
+                     Const_Map::tile_size) +
+              Const_Map::center};
       int npyt =
-          (int)floor((this->hitbox.y - this->speed * dt) / MAP_TILE_SIZE) + 50;
+          (int)floor((this->hitbox.y - this->speed * dt) / Const_Map::tile_size) +
+          Const_Map::center;
       if (map[npyt][npxts[0]].type != MAP_TILE_TYPE_WALL &&
           map[npyt][npxts[1]].type != MAP_TILE_TYPE_WALL) {
         this->rect.y -= this->speed * dt;
@@ -69,13 +81,14 @@ public:
       }
     } else if (IsKeyDown(KEY_S)) {
       int npxts[2] = {
-          (int)floor(this->hitbox.x / MAP_TILE_SIZE) + 50,
-          (int)floor((this->hitbox.x + this->hitbox.width) / MAP_TILE_SIZE) +
-              50};
+          (int)floor(this->hitbox.x / Const_Map::tile_size) + Const_Map::center,
+          (int)floor((this->hitbox.x + this->hitbox.width) /
+                     Const_Map::tile_size) +
+              Const_Map::center};
       int npyt =
           (int)floor((this->hitbox.y + this->hitbox.height + this->speed * dt) /
-                     MAP_TILE_SIZE) +
-          50;
+                     Const_Map::tile_size) +
+          Const_Map::center;
       if (map[npyt][npxts[0]].type != MAP_TILE_TYPE_WALL &&
           map[npyt][npxts[1]].type != MAP_TILE_TYPE_WALL) {
 
@@ -86,22 +99,24 @@ public:
     }
 
     if (std::abs((this->rect.x + this->rect.width / 2) - gamecam.target.x) >
-        100) {
+        Const_Player::camera_follow_threshold_x) {
       if (this->rect.x > gamecam.target.x)
         gamecam.target.x =
-            this->rect.x + this->rect.width / 2 - PLAYER_CAMERA_FOLLOW_MARGIN;
+            this->rect.x + this->rect.width / 2 - Const_Player::camera_follow_margin;
       else
         gamecam.target.x =
-            this->rect.x + this->rect.width / 2 + PLAYER_CAMERA_FOLLOW_MARGIN;
+            this->rect.x + this->rect.width / 2 + Const_Player::camera_follow_margin;
     }
     if (std::abs((this->rect.y + this->rect.height / 2) - gamecam.target.y) >
-        75) {
+        Const_Player::camera_follow_threshold_y) {
       if (this->rect.y > gamecam.target.y)
         gamecam.target.y = this->rect.y + this->rect.height / 2 -
-                           PLAYER_CAMERA_FOLLOW_MARGIN * 0.75;
+                           Const_Player::camera_follow_margin *
+                               Const_Player::camera_follow_y_scale;
       else
         gamecam.target.y = this->rect.y + this->rect.height / 2 +
-                           PLAYER_CAMERA_FOLLOW_MARGIN * 0.75;
+                           Const_Player::camera_follow_margin *
+                               Const_Player::camera_follow_y_scale;
     }
 
     this->anim_frame_real++;
