@@ -29,17 +29,19 @@ public:
     for (int y = 0; y < 100; y++) {
       for (int x = 0; x < 100; x++) {
         if (Vector2Distance({(float)x + 0.5f, (float)y + 0.5f},
-                            {50.0f, 50.0f}) > 5) {
+                            {50.0f, 50.0f}) < 3) {
+          map[y][x] = MapTile(MAP_TILE_SOURCE_STONE);
+        } else {
           map[y][x] = MapTile(MAP_TILE_SOURCE_GRASS);
           if (GetRandomValue(0, 6) == 3) {
             map[y][x] = MapTile(MAP_TILE_SOURCE_TREE);
-          } else if (GetRandomValue(0, 50) == 5) {
-            std::cout << x << y << std::endl;
-            enemies.push_back(Enemy({x * MAP_TILE_SIZE, y * MAP_TILE_SIZE,
-                                     MAP_TILE_SIZE, MAP_TILE_SIZE}));
           }
-        } else {
-          map[y][x] = MapTile(MAP_TILE_SOURCE_STONE);
+          if (GetRandomValue(0, 20) == 5 &&
+              map[y][x].type != MAP_TILE_TYPE_WALL) {
+            enemies.push_back(
+                Enemy({(x - 50) * MAP_TILE_SIZE, (y - 50) * MAP_TILE_SIZE,
+                       MAP_TILE_SIZE, MAP_TILE_SIZE}));
+          }
         }
       }
     }
@@ -60,6 +62,11 @@ public:
       from_main_menu_transition.update();
     }
 
+    for (Enemy &e : enemies)
+      e.update(dt,
+               {player.hitbox.x + player.hitbox.width / 2,
+                player.hitbox.y + player.hitbox.height / 2},
+               map);
     player.update(map, dt, gamecam);
   }
 
