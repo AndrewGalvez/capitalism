@@ -38,10 +38,14 @@ public:
                              Const_Map::tree_spawn_roll_max) ==
               Const_Map::tree_spawn_roll_hit) {
             map[y][x] = MapTile(MAP_TILE_SOURCE_TREE);
-          } else if (GetRandomValue(0, 50) == 5) {
+          } else if (GetRandomValue(Const_Map::enemy_spawn_roll_min,
+                                    Const_Map::enemy_spawn_roll_max) ==
+                     Const_Map::enemy_spawn_roll_hit) {
             std::cout << x << y << std::endl;
-            enemies.push_back(Enemy({x * MAP_TILE_SIZE, y * MAP_TILE_SIZE,
-                                     MAP_TILE_SIZE, MAP_TILE_SIZE}));
+            enemies.push_back(Enemy({x * Const_Map::tile_size,
+                                     y * Const_Map::tile_size,
+                                     Const_Map::tile_size,
+                                     Const_Map::tile_size}));
           }
         } else {
           map[y][x] = MapTile(MAP_TILE_SOURCE_STONE);

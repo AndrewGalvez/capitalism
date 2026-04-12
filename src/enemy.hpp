@@ -5,13 +5,17 @@
 
 class Enemy {
 public:
-  Rectangle rect = {0, 0, MAP_TILE_SIZE, MAP_TILE_SIZE};
+  Rectangle rect = {0, 0, Const_Map::tile_size, Const_Map::tile_size};
   int anim_frame = 0, anim_frame_real = 0, anim_frame_real_max = 0, facing = 0;
 
   Enemy(Rectangle rect) : rect(rect) {};
 
   void draw() {
-    Rectangle source = {32.0f * anim_frame_real, 32.0f * (facing + 4), 32, 32};
+    Rectangle source = {Const_Enemy::sprite_unit_px * anim_frame_real,
+                        Const_Enemy::sprite_unit_px *
+                            (facing + Const_Enemy::sprite_sheet_facing_offset),
+                        Const_Enemy::sprite_unit_px,
+                        Const_Enemy::sprite_unit_px};
     DrawTexturePro(characters, source, rect, {0, 0}, 0.0f, WHITE);
   }
 };
