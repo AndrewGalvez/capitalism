@@ -6,7 +6,12 @@
 
 inline bool exitGame = false;
 
-enum GameMenuState { GMSTATE_MAIN, GMSTATE_GAME, GMSTATE_SHOP, GMSTATE_DEATH };
+enum GameMenuState {
+  GMSTATE_MAIN,
+  GMSTATE_GAME,
+  GMSTATE_VILLAGE,
+  GMSTATE_DEATH
+};
 
 namespace Const_Map {
     inline constexpr int size = 100;

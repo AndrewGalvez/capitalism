@@ -1,6 +1,7 @@
 #include "game.hpp"
 #include "global.hpp"
 #include "menu_main.hpp"
+#include "village.hpp"
 #include <cmath>
 #include <raylib.h>
 
@@ -22,6 +23,7 @@ int main() {
   RenderTexture2D render_texture =
       LoadRenderTexture(Const_Render::width, Const_Render::height);
   GameMenuMain main_menu;
+  GameMenuVillage village_menu;
   Game game;
 
   SetTargetFPS(Const_Render::target_fps);
@@ -53,6 +55,9 @@ int main() {
       game.update(dt);
       break;
     }
+    case GMSTATE_VILLAGE: {
+      village_menu.update(dt, mouse_pos);
+    }
     };
 
     ClearBackground(WHITE);
@@ -63,6 +68,8 @@ int main() {
       main_menu.draw(mouse_pos);
     } else if (game_menu_state == GMSTATE_GAME) {
       game.draw();
+    } else if (game_menu_state == GMSTATE_VILLAGE) {
+      village_menu.draw();
     }
 
    EndTextureMode();

@@ -1,11 +1,13 @@
 #pragma once
 #include "assets.hpp"
+#include "enemy.hpp"
 #include "global.hpp"
 #include "map.hpp"
 #include "player.hpp"
 #include "raylib.h"
 #include "utils.hpp"
 #include <raymath.h>
+#include <vector>
 
 class Game {
 public:
@@ -13,6 +15,7 @@ public:
       SceneTransitionFade(16, DARKGREEN, ColorAlpha(DARKGREEN, 0));
   Camera2D gamecam;
   MapTile map[Const_Map::size][Const_Map::size];
+  std::vector<Enemy> enemies;
 
   Player player;
 
@@ -35,6 +38,10 @@ public:
                              Const_Map::tree_spawn_roll_max) ==
               Const_Map::tree_spawn_roll_hit) {
             map[y][x] = MapTile(MAP_TILE_SOURCE_TREE);
+          } else if (GetRandomValue(0, 50) == 5) {
+            std::cout << x << y << std::endl;
+            enemies.push_back(Enemy({x * MAP_TILE_SIZE, y * MAP_TILE_SIZE,
+                                     MAP_TILE_SIZE, MAP_TILE_SIZE}));
           }
         } else {
           map[y][x] = MapTile(MAP_TILE_SOURCE_STONE);
@@ -77,6 +84,9 @@ public:
                        WHITE);
       }
     }
+
+    for (auto e : enemies)
+      e.draw();
 
     player.draw();
 
