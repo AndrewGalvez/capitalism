@@ -38,12 +38,13 @@ public:
                              Const_Map::tree_spawn_roll_max) ==
               Const_Map::tree_spawn_roll_hit) {
             map[y][x] = MapTile(MAP_TILE_SOURCE_TREE);
-          } else if (GetRandomValue(Const_Map::enemy_spawn_roll_min,
-                                    Const_Map::enemy_spawn_roll_max) ==
-                     Const_Map::enemy_spawn_roll_hit) {
-            std::cout << x << y << std::endl;
-            enemies.push_back(Enemy({x * Const_Map::tile_size,
-                                     y * Const_Map::tile_size,
+          }
+          if (GetRandomValue(Const_Map::enemy_spawn_roll_min,
+                             Const_Map::enemy_spawn_roll_max) ==
+                  Const_Map::enemy_spawn_roll_hit &&
+              map[y][x].type != MAP_TILE_TYPE_WALL) {
+            enemies.push_back(Enemy({(x - Const_Map::center) * Const_Map::tile_size,
+                                     (y - Const_Map::center) * Const_Map::tile_size,
                                      Const_Map::tile_size,
                                      Const_Map::tile_size}));
           }
@@ -69,6 +70,11 @@ public:
       from_main_menu_transition.update();
     }
 
+    for (Enemy &e : enemies)
+      e.update(dt,
+               {player.hitbox.x + player.hitbox.width / 2,
+                player.hitbox.y + player.hitbox.height / 2},
+               map);
     player.update(map, dt, gamecam);
   }
 
