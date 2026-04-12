@@ -17,19 +17,21 @@ public:
   float quit_text_hovered_time = 0;
   bool play_text_hovered, quit_text_hovered;
   int frame = 1;
-  const Rectangle play_text_box = {RENDER_W / 2 - 100, RENDER_H / 3 + 64 + 8,
-                                   200, 48 + 16};
+  const Rectangle play_text_box = {Const_Render::width / 2 - 100,
+                                   Const_Render::height / 3 + 64 + 8, 200,
+                                   48 + 16};
   const Rectangle quit_text_box = {
-      RENDER_W / 2 - 100, RENDER_H / 3 + 64 + 16 + 48 + 8, 200, 48 + 12};
+      Const_Render::width / 2 - 100,
+      Const_Render::height / 3 + 64 + 16 + 48 + 8, 200, 48 + 12};
 
   void draw_title(std::string title) {
-    int title_center_x = RENDER_W / 2;
-    int title_center_y = RENDER_H / 3;
+    int title_center_x = Const_Render::width / 2;
+    int title_center_y = Const_Render::height / 3;
     const int font_size = 64;
     const int title_len = title.length();
 
     int title_left_x =
-        RENDER_W / 2 -
+        Const_Render::width / 2 -
         (MeasureText(title.c_str(), 64) + (title_len * 5)) / 2.0f;
 
     for (int i = 0; i < title_len; i++) {
@@ -84,12 +86,13 @@ public:
         12 * ease_in_out_cubic(play_text_hovered_time / 30.0f);
     float quit_text_x_offset =
         12 * ease_in_out_cubic(quit_text_hovered_time / 30.0f);
-    DrawTextCentered("> play", RENDER_W / 2 + play_text_x_offset,
-                     RENDER_H / 3 + 64 + 16, 48, WHITE);
-    DrawTextCentered("> quit", RENDER_W / 2 + quit_text_x_offset,
-                     RENDER_H / 3 + 64 + 16 + 48 + 8, 48, WHITE);
+    DrawTextCentered("> play", Const_Render::width / 2 + play_text_x_offset,
+                     Const_Render::height / 3 + 64 + 16, 48, WHITE);
+    DrawTextCentered("> quit", Const_Render::width / 2 + quit_text_x_offset,
+                     Const_Render::height / 3 + 64 + 16 + 48 + 8, 48, WHITE);
     if (is_switching_to_game) {
-      DrawRectangle(0, 0, RENDER_W, RENDER_H, transition.getColor());
+      DrawRectangle(0, 0, Const_Render::width, Const_Render::height,
+                    transition.getColor());
     }
   }
 

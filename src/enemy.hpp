@@ -24,20 +24,24 @@ inline int getSide(int px, int py, int x, int y, int w, int h) {
 
 class Enemy {
 public:
-  Rectangle rect = {0, 0, MAP_TILE_SIZE, MAP_TILE_SIZE};
+  Rectangle rect = {0, 0, Const_Map::tile_size, Const_Map::tile_size};
   int anim_frame = 1, anim_frame_real = 0, anim_frame_real_max = 10, facing = 0;
   int anim_dir = 1;
-  float speed = 40;
+  float speed = 40.0f;
 
   Enemy(Rectangle rect) : rect(rect) {};
 
   void draw() {
-    Rectangle source = {32.0f * anim_frame, (32.0f * 3) + 32.0f * facing, 32,
-                        32};
+    Rectangle source = {Const_Enemy::sprite_unit_px * anim_frame,
+                        (Const_Enemy::sprite_unit_px * 3.0f) +
+                            Const_Enemy::sprite_unit_px * facing,
+                        Const_Enemy::sprite_unit_px,
+                        Const_Enemy::sprite_unit_px};
     DrawTexturePro(characters, source, rect, {0, 0}, 0.0f, WHITE);
   }
 
-  void update(float dt, Vector2 playercenter, MapTile map[100][100]) {
+  void update(float dt, Vector2 playercenter,
+              MapTile map[Const_Map::size][Const_Map::size]) {
     anim_frame_real++;
     if (anim_frame_real >= anim_frame_real_max) {
       anim_frame_real = 0;
@@ -56,8 +60,12 @@ public:
     float newy = newpos.y - rect.height / 2;
 
     auto tileAt = [&](float wx, float wy) -> MapTile & {
-      int tx = std::clamp((int)floor(wx / MAP_TILE_SIZE) + 50, 0, 99);
-      int ty = std::clamp((int)floor(wy / MAP_TILE_SIZE) + 50, 0, 99);
+      int tx = std::max(
+          0, std::min(Const_Map::size - 1,
+                      (int)floor(wx / Const_Map::tile_size) + Const_Map::center));
+      int ty = std::max(
+          0, std::min(Const_Map::size - 1,
+                      (int)floor(wy / Const_Map::tile_size) + Const_Map::center));
       return map[ty][tx];
     };
 
