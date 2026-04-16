@@ -223,4 +223,4 @@ A casino or tavern in town lets you risk gold for a chance at big returns — or
 
 ### Build Commands
 - **Linux**: (yo waffledogz fill it in hereur build cmd)
-- **Windows**: g++ -std=c++17 .\src\main.cpp -o .\capitalism.exe -I.\src -IC:\raylib\include -LC:\raylib\lib -lraylib -lopengl32 -lgdi32 -lwinmm
+- **Windows**: `g++ -std=c++17 .\src\main.cpp -o .\capitalism.exe -I.\src -I.\include -L.\lib\win64 -lraylib -lopengl32 -lgdi32 -lwinmm`
