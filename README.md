@@ -220,3 +220,7 @@ A casino or tavern in town lets you risk gold for a chance at big returns — or
 - **Language:** C++
 - **Engine:** raylib
 - **Tileset:** Tiny 16 by Sharm (itch.io)
+
+### Build Commands
+- **Linux**: (yo waffledogz fill it in hereur build cmd)
+- **Windows**: g++ -std=c++17 .\src\main.cpp -o .\capitalism.exe -I.\src -IC:\raylib\include -LC:\raylib\lib -lraylib -lopengl32 -lgdi32 -lwinmm
