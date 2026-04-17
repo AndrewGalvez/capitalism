@@ -69,6 +69,8 @@ public:
 
         vel = v;
         e.vel = Vector2Negate(v);
+
+        state.health--;
       }
     }
 
