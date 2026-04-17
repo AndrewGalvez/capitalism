@@ -6,7 +6,7 @@
 #include "player.hpp"
 #include "raylib.h"
 #include "utils.hpp"
-#include <raymath.h>
+#include "raymath.h"
 #include <vector>
 
 class Game {
