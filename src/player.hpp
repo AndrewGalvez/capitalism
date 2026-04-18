@@ -91,6 +91,8 @@ public:
         (int)floor((int)(hitbox.y + hitbox.height) / (int)MAP_TILE_SIZE) + 50};
 
     auto iswall = [&](int x, int y) {
+      x = std::clamp(x, 0, 99);
+      y = std::clamp(y, 0, 99);
       return map[y][x].type == MAP_TILE_TYPE_WALL;
     };
 

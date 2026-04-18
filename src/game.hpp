@@ -8,6 +8,7 @@
 #include "raylib.h"
 #include "utils.hpp"
 #include "raymath.h"
+#include <algorithm>
 #include <vector>
 
 class Game {
@@ -50,10 +51,10 @@ public:
 
     for (int y = 0; y < 100; y++) {
       for (int x = 0; x < 100; x++) {
-        MapTileSourceName n = map[y - 1][x].name;
-        MapTileSourceName e = map[y][x + 1].name;
-        MapTileSourceName s = map[y + 1][x].name;
-        MapTileSourceName w = map[y][x - 1].name;
+        MapTileSourceName n = map[std::max(y - 1, 0)][x].name;
+        MapTileSourceName e = map[y][std::min(x + 1, 99)].name;
+        MapTileSourceName s = map[std::min(y + 1, 99)][x].name;
+        MapTileSourceName w = map[y][std::max(x - 1, 0)].name;
         map[y][x].fix(n, e, s, w);
       }
     }
