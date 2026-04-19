@@ -205,7 +205,7 @@ A casino or tavern in town lets you risk gold for a chance at big returns — or
 ### Mechanics
 - House always has an edge, but odds improve with a "luck" stat you can invest in
 - Hot streak system — win several in a row and the house cuts you off or raises limits
-- Loan sharks in the casino offer instant gold at brutal interest rates
+- Loan sharks in the casino offer instant gold at brutal interest rates.
 - Jackpot prizes can include rare gear, map locations, or stock tips
 
 ### Risk
