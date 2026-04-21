@@ -29,7 +29,7 @@ public:
     case VILLAGE_STATE_SELECTING: {
       DrawText("Village", RENDER_W - MeasureText("Village", 64) - 20, 20, 64,
                WHITE);
-      for (int i = 0; i < 8; i++) {
+      for (int i = 0; i < 7; i++) {
         GameMenuVillageSelectionOption opt = selections[i];
         DrawText(opt.text, 20 + 40 * ease_in_out_quadratic(opt.hover / 32.0f),
                  RENDER_W / 4 + i * 56, 48, WHITE);
@@ -40,7 +40,7 @@ public:
     }
   }
   void update(float dt, Vector2 mouse_pos) {
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 7; i++) {
       GameMenuVillageSelectionOption &opt = selections[i];
       Rectangle hover_rect = {0, (float)RENDER_W / 4 + i * 56 - 56 / 4, 500,
                               56 * 1.5};

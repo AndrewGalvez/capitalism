@@ -4,7 +4,7 @@
 #include "map.hpp"
 #include "raylib.h"
 #include <algorithm>
-#include <raymath.h>
+#include "raymath.h"
 
 inline int getSide(int px, int py, int x, int y, int w, int h) {
   const int nx = (px - x) / w; // normalize to [0,1]

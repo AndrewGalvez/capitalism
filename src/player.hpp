@@ -86,6 +86,8 @@ public:
     };
 
     auto iswall = [&](int x, int y) {
+      x = std::clamp(x, 0, 99);
+      y = std::clamp(y, 0, 99);
       if (x < 0 || x >= 100 || y < 0 || y >= 100)
         return true;
       return map[y][x].type == MAP_TILE_TYPE_WALL;
